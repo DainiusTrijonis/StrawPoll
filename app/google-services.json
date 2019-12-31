@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "355588464851",
+    "firebase_url": "https://strawpoll-fc128.firebaseio.com",
+    "project_id": "strawpoll-fc128",
+    "storage_bucket": "strawpoll-fc128.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355588464851:android:6b38f58e43aed625ae3426",
+        "android_client_info": {
+          "package_name": "com.example.strawpoll"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355588464851-vtmeqah382q9mqgcrdhigb73jvcpocb3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.strawpoll",
+            "certificate_hash": "319854824cb2028d5e85119b5998baefe9e80ae2"
+          }
+        },
+        {
+          "client_id": "355588464851-8jm63klqr8l5kie7sb8iesh1ove7le09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs8tHkuxUqMJE0CFCLrMg6ihOxj0qcbQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355588464851-8jm63klqr8l5kie7sb8iesh1ove7le09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
