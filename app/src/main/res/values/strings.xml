@@ -5,6 +5,9 @@
     <string name="twitter_consumer_key" translatable="false">cHLfPEmuSFm48gOACuWuCdbjA</string>
     <string name="twitter_consumer_secret" translatable="false">j5y41PcBaUZcuEifHcMWy199rY7tGcqj5xhBQ4QjUpZbseDvVD</string>
 
+    <!-- AdMob unit id -->
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-4954560196928173/4816367703</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

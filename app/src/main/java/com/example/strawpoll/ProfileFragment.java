@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +30,8 @@ public class ProfileFragment extends Fragment {
     private TextView emailTextView;
     private ImageView profileImageView;
     private Button signOutButton;
+
+    private AdView mAdView;
     public ProfileFragment() {
     }
 
@@ -66,5 +71,16 @@ public class ProfileFragment extends Fragment {
         else {
             Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_authenticationFragment);
         }
+
+        //Admob
+        mAdView = getActivity().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+        });
     }
 }

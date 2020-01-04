@@ -8,6 +8,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme_NoActionBar);
         setContentView(R.layout.activity_splash_screen);
         int SPLASH_TIME_OUT = 5000;
         new Handler().postDelayed(new Runnable(){
