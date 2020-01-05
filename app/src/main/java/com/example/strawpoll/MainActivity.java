@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        NavigationUI.setupWithNavController(bottomNav, navController);
 
         //MobileAdsInitialize
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        NavigationUI.setupWithNavController(bottomNav, navController);
-        Intent homeIntent = new Intent(MainActivity.this, SplashScreenActivity.class);
-        startActivity(homeIntent);
+
+        //Intent homeIntent = new Intent(MainActivity.this, SplashScreenActivity.class);
+        //startActivity(homeIntent);
     }
 }

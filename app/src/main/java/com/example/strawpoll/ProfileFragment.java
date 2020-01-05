@@ -30,8 +30,8 @@ public class ProfileFragment extends Fragment {
     private TextView emailTextView;
     private ImageView profileImageView;
     private Button signOutButton;
-
     private AdView mAdView;
+
     public ProfileFragment() {
     }
 

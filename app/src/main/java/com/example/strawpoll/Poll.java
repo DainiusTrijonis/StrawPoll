@@ -1,23 +1,20 @@
 package com.example.strawpoll;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Poll implements Serializable {
 
     private Boolean expired;
     private String title;
-    private String userId;
-    private List<PollOption> pollOption;
+    private String user;
 
     public Poll() {
     }
 
-    public Poll(Boolean expired, String title, String userId, List<PollOption> pollOption) {
+    public Poll(Boolean expired, String title, String user) {
         this.expired = expired;
         this.title = title;
-        this.userId = userId;
-        this.pollOption = pollOption;
+        this.user = user;
     }
     public Boolean getExpired() {
         return expired;
@@ -27,11 +24,7 @@ public class Poll implements Serializable {
         return title;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public List<PollOption> getPollOption() {
-        return pollOption;
+    public String getUser() {
+        return user;
     }
 }
