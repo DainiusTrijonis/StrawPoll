@@ -16,6 +16,7 @@ public class Poll implements Serializable {
         this.title = title;
         this.user = user;
     }
+
     public Boolean getExpired() {
         return expired;
     }

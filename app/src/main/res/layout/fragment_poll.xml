@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="#FFFFE8"
     tools:context=".PollFragment">
     <TextView
         android:id="@+id/text_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="Title"
         android:textSize="24pt"
         android:textStyle="italic|bold"
         />
@@ -18,7 +19,7 @@
         android:id="@+id/text_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="dainius.trijonis@gmail.com"
         android:textSize="9pt"
         android:textStyle="italic|bold"
         />
@@ -26,8 +27,25 @@
         android:id="@+id/text_expired"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="Open"
         android:textSize="9pt"
         android:textStyle="italic|bold"
         />
+
+    <TextView
+        android:id="@+id/text_view_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Options"
+        android:textSize="9pt"
+        android:textStyle="italic|bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/answer_option_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+
 </LinearLayout>
