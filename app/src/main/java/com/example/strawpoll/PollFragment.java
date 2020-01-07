@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,10 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,11 +25,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -47,6 +44,7 @@ public class PollFragment extends Fragment {
     private Poll poll; // poll object
     private String id; // id of Poll
 
+    private Boolean alreadyVoted=false;
 
     private TextView textViewTitle;
     private TextView textViewEmail;
@@ -109,10 +107,19 @@ public class PollFragment extends Fragment {
 
         adapter.setOnItemClickListener(new AnswerOptionAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                Log.w("asd",answerOptionsRef.document(documentSnapshot.getId()).toString());
-                answerOptionsRef.document(documentSnapshot.getId()).update("votes",FieldValue.arrayUnion(user.getUid()));
-
+            public void onItemClick(final DocumentSnapshot documentSnapshot, int position) {
+                Query query = answerOptionsRef.whereArrayContains("votes", user.getUid());
+                query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.size()==0) {
+                            answerOptionsRef.document(documentSnapshot.getId()).update("votes",FieldValue.arrayUnion(user.getUid()));
+                        }
+                        else {
+                            Toast.makeText(getActivity(), "You have already voted",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }

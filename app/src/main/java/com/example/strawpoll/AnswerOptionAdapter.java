@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 
@@ -16,7 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 public class AnswerOptionAdapter extends FirestoreRecyclerAdapter<AnswerOption, AnswerOptionAdapter.AnswerOptionHolder> {
 
     private OnItemClickListener listener;
-
+    private FirebaseAuth mAuth;
 
     public AnswerOptionAdapter(@NonNull FirestoreRecyclerOptions<AnswerOption> options) {
         super(options);
@@ -25,9 +27,16 @@ public class AnswerOptionAdapter extends FirestoreRecyclerAdapter<AnswerOption, 
     @Override
     protected void onBindViewHolder(@NonNull AnswerOptionHolder answerOptionHolder, int i, @NonNull AnswerOption answerOption) {
         answerOptionHolder.checkBoxAnswer.setText(answerOption.getAnswer());
-        int x  = answerOption.getVotes().size();
-        String number = String.valueOf(x);
-        answerOptionHolder.textViewCount.setText(number);
+        FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
+        if(answerOption.getVotes().contains(currentUser.getUid())) {
+            answerOptionHolder.checkBoxAnswer.setChecked(true);
+        }
+        else {
+            answerOptionHolder.checkBoxAnswer.setChecked(false);
+        }
+
+
+        answerOptionHolder.textViewCount.setText(String.valueOf(answerOption.getVotes().size()));
     }
 
     @NonNull
