@@ -110,11 +110,11 @@ public class PollFragment extends Fragment {
                 query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots.size()==0) {
+                        if(queryDocumentSnapshots.size()==0 && !poll.getExpired()) {
                             answerOptionsRef.document(documentSnapshot.getId()).update("votes",FieldValue.arrayUnion(user.getUid()));
                         }
                         else {
-                            Toast.makeText(getActivity(), "You have already voted",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "You have already voted or Poll have expired ",Toast.LENGTH_LONG).show();
                         }
                     }
                 });
