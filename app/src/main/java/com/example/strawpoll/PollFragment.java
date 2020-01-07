@@ -18,34 +18,39 @@ import android.widget.TextView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PollFragment extends Fragment {
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference answerOptionsRef;
+    private AnswerOptionAdapter adapter;
+
+    private FirebaseUser user;
 
     private Poll poll; // poll object
     private String id; // id of Poll
 
+
     private TextView textViewTitle;
     private TextView textViewEmail;
     private TextView textViewExpired;
-    private RecyclerView answerOptionRecyclerView;
-
-    // getting for recycleview answeroptions
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference adbookRef = db.collection("answerOption");
-    private AnswerOptionAdapter adapter;
-
 
     public PollFragment() {
         // Required empty public constructor
@@ -62,17 +67,17 @@ public class PollFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // getting from parent fragment bundle
         Bundle bundle = getArguments();
         poll = (Poll) bundle.getSerializable("poll");
         id = bundle.getString("id");
+
+        //for votes storing uid
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         //initializing textviews and recyclerview
         textViewTitle = getActivity().findViewById(R.id.text_title);
         textViewEmail = getActivity().findViewById(R.id.text_email);
         textViewExpired = getActivity().findViewById(R.id.text_expired);
-        answerOptionRecyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.answer_option_recycler_view);
 
         //Setting text on textViews
         textViewTitle.setText(poll.getTitle());
@@ -84,48 +89,32 @@ public class PollFragment extends Fragment {
             textViewExpired.setText("Open");
         }
 
-        //setting for recycleView query for specific PoolAnswers
-        //adbookRef = db.collection("polls").document(id).collection("answerOption");
-        //getData();
+        answerOptionsRef = FirebaseFirestore.getInstance().collection("polls").document(id).collection("answerOption");
         setUpRecyclerView();
     }
 
-    private void getData() {
-        db.collection("answerOption" )
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("asd --", document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w("asd eee", "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-    }
 
     private void setUpRecyclerView() {
-        Query query = adbookRef;
+        Query query = answerOptionsRef.orderBy("answer",Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<AnswerOption> options = new FirestoreRecyclerOptions.Builder<AnswerOption>()
                 .setQuery(query,AnswerOption.class)
                 .build();
         adapter = new AnswerOptionAdapter(options);
+
+        RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.recycler_view2);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+
         adapter.setOnItemClickListener(new AnswerOptionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Log.w("asd",answerOptionsRef.document(documentSnapshot.getId()).toString());
+                answerOptionsRef.document(documentSnapshot.getId()).update("votes",FieldValue.arrayUnion(user.getUid()));
 
             }
         });
-
-        answerOptionRecyclerView.setHasFixedSize(true);
-        answerOptionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        answerOptionRecyclerView.setAdapter(adapter);
-
-
     }
     @Override
     public void onStart() {

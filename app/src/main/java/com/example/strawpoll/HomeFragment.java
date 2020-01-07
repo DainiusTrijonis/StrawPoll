@@ -26,7 +26,7 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference adbookRef = db.collection("polls");
+    private CollectionReference poolRef = db.collection("polls");
     private PollAdapter adapter;
 
     public HomeFragment() {
@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
         setUpRecyclerView();
     }
     private void setUpRecyclerView() {
-        Query query = adbookRef.orderBy("title",Query.Direction.DESCENDING);
+        Query query = poolRef.orderBy("title",Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Poll> options = new FirestoreRecyclerOptions.Builder<Poll>()
                 .setQuery(query,Poll.class)

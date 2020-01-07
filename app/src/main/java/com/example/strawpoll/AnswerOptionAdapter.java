@@ -25,6 +25,9 @@ public class AnswerOptionAdapter extends FirestoreRecyclerAdapter<AnswerOption, 
     @Override
     protected void onBindViewHolder(@NonNull AnswerOptionHolder answerOptionHolder, int i, @NonNull AnswerOption answerOption) {
         answerOptionHolder.checkBoxAnswer.setText(answerOption.getAnswer());
+        int x  = answerOption.getVotes().size();
+        String number = String.valueOf(x);
+        answerOptionHolder.textViewCount.setText(number);
     }
 
     @NonNull
@@ -36,11 +39,13 @@ public class AnswerOptionAdapter extends FirestoreRecyclerAdapter<AnswerOption, 
 
     class AnswerOptionHolder extends RecyclerView.ViewHolder {
         CheckBox checkBoxAnswer;
+        TextView textViewCount;
 
         public AnswerOptionHolder(@NonNull View itemView) {
             super(itemView);
 
             checkBoxAnswer = itemView.findViewById(R.id.check_box_answer);
+            textViewCount = itemView.findViewById(R.id.text_view_count);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
