@@ -44,8 +44,6 @@ public class PollFragment extends Fragment {
     private Poll poll; // poll object
     private String id; // id of Poll
 
-    private Boolean alreadyVoted=false;
-
     private TextView textViewTitle;
     private TextView textViewEmail;
     private TextView textViewExpired;
