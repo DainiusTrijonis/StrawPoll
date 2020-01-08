@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
         });
     }
     private void setUpRecyclerView(String title) {
-        Query query = poolRef.whereEqualTo("title", title).orderBy("title",Query.Direction.DESCENDING);
+        Query query = poolRef.orderBy("title").startAt(title).endAt(title + "\uf8ff");
 
         FirestoreRecyclerOptions<Poll> options = new FirestoreRecyclerOptions.Builder<Poll>()
                 .setQuery(query,Poll.class)

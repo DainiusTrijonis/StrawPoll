@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -83,12 +84,17 @@ public class MyPollsFragment extends Fragment {
 
     private void addPoll() {
         //navigation to new poll fragment
-        Navigation.findNavController(Objects.requireNonNull(getView())).navigate(R.id.action_myPollsFragment_to_addNewPollFragment);
+        if (user == null) {
+            Toast.makeText(getActivity(), "You need to be logged in to create polls",Toast.LENGTH_LONG).show();
+        } else {
+            Navigation.findNavController(Objects.requireNonNull(getView())).navigate(R.id.action_myPollsFragment_to_addNewPollFragment);
+        }
     }
 
 
     private void setUpRecyclerView() {
-        Query query = myPoolRef.whereEqualTo("user", user.getEmail()).orderBy("title",Query.Direction.DESCENDING);
+        String userEmail = user != null ? user.getEmail() : "";
+        Query query = myPoolRef.whereEqualTo("user", userEmail).orderBy("title",Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Poll> options = new FirestoreRecyclerOptions.Builder<Poll>()
                 .setQuery(query,Poll.class)
