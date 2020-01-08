@@ -17,7 +17,11 @@
         android:id="@+id/myPollsFragment"
         android:name="com.example.strawpoll.MyPollsFragment"
         android:label="fragment_my_polls"
-        tools:layout="@layout/fragment_my_polls" />
+        tools:layout="@layout/fragment_my_polls" >
+        <action
+            android:id="@+id/action_myPollsFragment_to_pollFragment"
+            app:destination="@id/pollFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.strawpoll.ProfileFragment"
