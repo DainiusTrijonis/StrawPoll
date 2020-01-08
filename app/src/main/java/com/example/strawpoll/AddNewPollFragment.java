@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -85,8 +87,8 @@ public class AddNewPollFragment extends Fragment {
 
         arrayOfAnswerOptions = new ArrayList<AnswerOption>();
 
-        arrayOfAnswerOptions.add(new AnswerOption("Option1", new ArrayList<String>()));
-        arrayOfAnswerOptions.add(new AnswerOption("Option2", new ArrayList<String>()));
+        arrayOfAnswerOptions.add(new AnswerOption("Option #1", new ArrayList<String>()));
+        arrayOfAnswerOptions.add(new AnswerOption("Option #2", new ArrayList<String>()));
 
         adapter = new AnswerOptionsAdapter(getActivity(), arrayOfAnswerOptions);
 
@@ -104,7 +106,7 @@ public class AddNewPollFragment extends Fragment {
     }
 
     private void NewOption() {
-        arrayOfAnswerOptions.add(new AnswerOption("Option" + x.toString(), new ArrayList<String>()));
+        arrayOfAnswerOptions.add(new AnswerOption("Option #" + x.toString(), new ArrayList<String>()));
         x++;
         adapter = new AnswerOptionsAdapter(getActivity(), arrayOfAnswerOptions);
         listViewOptions.setAdapter(adapter);
@@ -130,14 +132,17 @@ public class AddNewPollFragment extends Fragment {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 CollectionReference answerOptionRef = pollRef.document(documentReference.getId()).collection("answerOption");
-                for (AnswerOption answerOption:arrayOfAnswerOptions) {
-                    answerOptionRef.add(answerOption);
+                View view;
+                EditText text;
+                for (int i = 0; i < listViewOptions.getCount(); i++) {
+                    view = listViewOptions.getChildAt(i);
+                    text = view.findViewById(R.id.edit_text);
+                    answerOptionRef.add(new AnswerOption(text.getText().toString(), new ArrayList<String>()));
                 }
             }
         });
 
-
-
+        Navigation.findNavController(Objects.requireNonNull(getView())).navigate(R.id.action_addNewPollFragment_to_homeFragment);
     }
 
     public class AnswerOptionsAdapter extends ArrayAdapter<AnswerOption> {
@@ -157,7 +162,7 @@ public class AddNewPollFragment extends Fragment {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.answer_option_add_item, parent, false);
             }
 
-            EditText optionTitle =  convertView.findViewById(R.id.edit_text_option);
+            TextView optionTitle =  convertView.findViewById(R.id.edit_text_option);
 
             optionTitle.setText(answerOption.getAnswer());
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +50,7 @@ public class PollFragment extends Fragment {
     private TextView textViewTitle;
     private TextView textViewEmail;
     private TextView textViewExpired;
+    private Button statusButton;
 
     public PollFragment() {
         // Required empty public constructor
@@ -74,16 +78,37 @@ public class PollFragment extends Fragment {
         textViewTitle = getActivity().findViewById(R.id.text_title);
         textViewEmail = getActivity().findViewById(R.id.text_email);
         textViewExpired = getActivity().findViewById(R.id.text_expired);
+        statusButton = getActivity().findViewById(R.id.status_button);
 
         //Setting text on textViews
         textViewTitle.setText(poll.getTitle());
         textViewEmail.setText(poll.getUser());
         if(poll.getExpired()) {
             textViewExpired.setText("Closed");
+            statusButton.setText("Open");
         }
         else {
             textViewExpired.setText("Open");
+            statusButton.setText("Close");
         }
+
+        if (user != null && user.getEmail().equals(poll.getUser())) {
+            statusButton.setVisibility(View.VISIBLE);
+        } else {
+            statusButton.setVisibility(View.INVISIBLE);
+        }
+
+        statusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseFirestore.getInstance().collection("polls").document(id).update("expired", !poll.getExpired()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Navigation.findNavController(Objects.requireNonNull(getView())).navigate(R.id.action_pollFragment_to_homeFragment);
+                    }
+                });
+            }
+        });
 
         answerOptionsRef = FirebaseFirestore.getInstance().collection("polls").document(id).collection("answerOption");
         setUpRecyclerView();
@@ -106,18 +131,22 @@ public class PollFragment extends Fragment {
         adapter.setOnItemClickListener(new AnswerOptionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final DocumentSnapshot documentSnapshot, int position) {
-                Query query = answerOptionsRef.whereArrayContains("votes", user.getUid());
-                query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots.size()==0 && !poll.getExpired()) {
-                            answerOptionsRef.document(documentSnapshot.getId()).update("votes",FieldValue.arrayUnion(user.getUid()));
+                if (user != null) {
+                    Query query = answerOptionsRef.whereArrayContains("votes", user.getUid());
+                    query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if(queryDocumentSnapshots.size()==0 && !poll.getExpired()) {
+                                answerOptionsRef.document(documentSnapshot.getId()).update("votes",FieldValue.arrayUnion(user.getUid()));
+                            }
+                            else {
+                                Toast.makeText(getActivity(), "You have already voted or Poll have expired ",Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(getActivity(), "You have already voted or Poll have expired ",Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                    });
+                } else {
+                    Toast.makeText(getActivity(), "You have to be logged in to vote",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
