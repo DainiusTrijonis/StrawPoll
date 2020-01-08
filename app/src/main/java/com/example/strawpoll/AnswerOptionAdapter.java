@@ -28,7 +28,7 @@ public class AnswerOptionAdapter extends FirestoreRecyclerAdapter<AnswerOption, 
     protected void onBindViewHolder(@NonNull AnswerOptionHolder answerOptionHolder, int i, @NonNull AnswerOption answerOption) {
         answerOptionHolder.checkBoxAnswer.setText(answerOption.getAnswer());
         FirebaseUser currentUser = mAuth.getInstance().getCurrentUser();
-        String userEmail = currentUser != null ? currentUser.getEmail() : "";
+        String userEmail = currentUser != null ? currentUser.getUid() : "";
         if(answerOption.getVotes().contains(userEmail)) {
             answerOptionHolder.checkBoxAnswer.setChecked(true);
         }
