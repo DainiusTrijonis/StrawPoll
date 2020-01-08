@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -42,10 +45,31 @@ public class MyPollsFragment extends Fragment {
 
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_polls, container, false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        MenuInflater menuInflater = Objects.requireNonNull(getActivity()).getMenuInflater();
+        menuInflater.inflate(R.menu.my_polls_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.add_poll) {
+            addPoll();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -56,6 +80,12 @@ public class MyPollsFragment extends Fragment {
 
         setUpRecyclerView();
     }
+
+    private void addPoll() {
+        //navigation to new poll fragment
+        Navigation.findNavController(Objects.requireNonNull(getView())).navigate(R.id.action_myPollsFragment_to_addNewPollFragment);
+    }
+
 
     private void setUpRecyclerView() {
         Query query = myPoolRef.whereEqualTo("user", user.getEmail()).orderBy("title",Query.Direction.DESCENDING);
@@ -82,6 +112,7 @@ public class MyPollsFragment extends Fragment {
             }
         });
     }
+
 
     @Override
     public void onStart() {

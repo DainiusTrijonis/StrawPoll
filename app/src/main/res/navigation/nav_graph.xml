@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_myPollsFragment_to_pollFragment"
             app:destination="@id/pollFragment" />
+        <action
+            android:id="@+id/action_myPollsFragment_to_addNewPollFragment"
+            app:destination="@id/addNewPollFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -45,4 +48,9 @@
         android:name="com.example.strawpoll.PollFragment"
         android:label="fragment_poll"
         tools:layout="@layout/fragment_poll" />
+    <fragment
+        android:id="@+id/addNewPollFragment"
+        android:name="com.example.strawpoll.AddNewPollFragment"
+        android:label="fragment_add_new_poll"
+        tools:layout="@layout/fragment_add_new_poll" />
 </navigation>
